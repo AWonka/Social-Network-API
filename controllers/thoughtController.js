@@ -22,7 +22,7 @@ module.exports = {
     createThought({params, body}, res) {
         Thought.create(body)
             .then((_id) => {
-                return User.findOneAndUpdate({ _id: params.userId }, { $push: { $thoughts: _id } }, { new: true });
+                return User.findOneAndUpdate({ _id: params.userId }, { $push: { thoughts: _id } }, { new: true });
             })
             .then((thought) => res.json(thought))
             .catch((err) => res.json(err))
