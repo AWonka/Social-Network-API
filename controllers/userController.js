@@ -79,7 +79,7 @@ module.exports = {
     },
     // delete a user
     deleteUser(req, res) {
-        User.findOneAndRemove({ _id: req.params.userId })
+        User.findOneAndDelete({ _id: req.params.userId })
             .then((user) =>
             !user
                 ? res.status(404).json({ message: 'No user found with that ID!' })
