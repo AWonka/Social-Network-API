@@ -1,29 +1,29 @@
-const { User } = require('../models');
+const { User, Thought } = require('../models');
 
 const userCount = async () =>
     User.aggregate()
         .count('userCount')
         .then((numberOfUsers) => numberOfUsers);
 
-const thoughts = async (userId) =>
-    User.aggregate([
-        {
-            $unwind: '$thoughts',
-        },
-        {
-            $group: { _id: userId, allThoughts: { $all: '$thoughts' } },
-        },
-    ]);   
+// const thoughts = (userId) =>
+//     User.aggregate([
+//         {
+//             $unwind: '$thoughts',
+//         },
+//         {
+//             $group: { _id: userId, thoughts: '$thoughts' },
+//         },
+//     ]);   
 
-const friends = async (userId) =>
-    User.aggregate([
-        {
-            $unwind: '$friends',
-        },
-        {
-            $group: { _id: userId, allFriends: { $all: '$friends' } },
-        },
-    ]);       
+// const friends = (userId) =>
+//     User.aggregate([
+//         {
+//             $unwind: '$friends',
+//         },
+//         {
+//             $group: { _id: userId, friends: '$friends' },
+//         },
+//     ]);       
 
 module.exports = {
     // get all users
@@ -45,14 +45,10 @@ module.exports = {
     getSingleUser(req, res) {
         User.findOne({ _id: req.params.userId })
             .select('-__v')
-            .then(async (user) =>
+            .then((user) =>
             !user
                 ? res.status(404).json({ message: 'No user with that ID!' })
-                : res.json({
-                    user,
-                    thoughts: await thoughts(req.params.userId),
-                    friends: await friends(req.params.userId),
-                })
+                : res.json(user)
             )
             .catch((err) => {
                 console.log(err);
